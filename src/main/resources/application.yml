@@ -1,0 +1,14 @@
+
+# 应用名称
+spring:
+  application:
+    name: demo
+# 关闭缓存引擎
+  thymeleaf:
+    cache: false
+
+# 应用服务 WEB 访问端口
+server:
+  port: 8080
+
+
