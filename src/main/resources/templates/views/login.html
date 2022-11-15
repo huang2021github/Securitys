@@ -18,20 +18,24 @@
             <h1 class="header">登录</h1>
         </div>
 
+        <div style="text-align: center" th:text="${SPRING_SECURITY_LAST_EXCEPTION}">
+
+        </div>
+
         <div class="ui placeholder segment">
             <div class="ui column very relaxed stackable grid">
                 <div class="column">
                     <div class="ui form">
-                        <form th:action="@{/login}" method="post">
+                        <form th:action="@{/doLogin}" method="post">
                             <div class="field">
-                                <label>Username</label>
+                                <label>用户名</label>
                                 <div class="ui left icon input">
-                                    <input type="text" placeholder="Username" name="user">
+                                    <input type="text" placeholder="账户" name="user">
                                     <i class="user icon"></i>
                                 </div>
                             </div>
                             <div class="field">
-                                <label>Password</label>
+                                <label>密码</label>
                                 <div class="ui left icon input">
                                     <input type="password" name="pwd">
                                     <i class="lock icon"></i>
@@ -49,7 +53,7 @@
                 </i>注册
             </div>
             <br><br>
-            <small>blog.kuangstudy.com</small>
+            <small>blog.hzy.com</small>
         </div>
     </div>
 

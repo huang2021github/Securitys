@@ -3,9 +3,15 @@
 spring:
   application:
     name: demo
-# 关闭缓存引擎
+# 关闭缓存引擎 (thymeleaf 缓存)
   thymeleaf:
     cache: false
+
+  security:
+    user:
+      name: root
+      password: root
+
 
 # 应用服务 WEB 访问端口
 server:
