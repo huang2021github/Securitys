@@ -1,4 +1,4 @@
-package com.security.config;
+package com.security.config.login;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.security.core.AuthenticationException;

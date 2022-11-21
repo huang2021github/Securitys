@@ -1,13 +1,20 @@
 package com.security.config;
 
+import com.security.config.login.MyLoginError;
+import com.security.config.login.MyLoingSuccess;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.util.DigestUtils;
 
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+    @Autowired
+    private UserServiceConfig securityConfig;
 
     //重写授权
     @Override
@@ -17,25 +24,23 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .mvcMatchers("/backend/security/index/**").permitAll()
                 .mvcMatchers("/backend/login/login").permitAll()
-                .mvcMatchers("/backend/security/indexTo/**").authenticated()
+                .mvcMatchers("/backend/security/indexTo/**").authenticated() //需要登录访问
+                .mvcMatchers("/backend/security/appoint/**").hasRole("pc") //指定PC访问
                 .and().formLogin().loginPage("/backend/login/login")
                     .usernameParameter("user")
                     .passwordParameter("pwd")
                     .loginProcessingUrl("/doLogin")//指定登录页面
-                    .successForwardUrl("/backend/security/indexTo/pc")//登录成功后会自动跳转的路径
-//                    .successHandler(new MyAuthenticationSuccessHandler())//认证成功之后时的处理  前后端分离
-//                    .failureHandler(new MyAuthenticationFailureHandler())//认证失败之后时的处理  前后端分离
+                    .successForwardUrl("/backend/login/index")//登录成功后会自动跳转的路径
+//                    .successHandler(new MyLoingSuccess())//认证成功之后时的处理  前后端分离 ======================
+//                    .failureHandler(new MyLoginError())//认证失败之后时的处理  前后端分离 ========================
                     .failureForwardUrl("/backend/login/login")//认证失败跳转的页面
                 .and().logout()//注销功能配置
                     .logoutUrl("/logout") //指定注销的URL  默认GET方式请求
                     .invalidateHttpSession(true)//默认 会话失效
                     .clearAuthentication(true)//默认 清除认证标记
                     .logoutSuccessUrl("/backend/login/login") //注销之后跳转的页面
-//                    .logoutSuccessHandler(new MyLogout())//前后分离数据
+//                    .logoutSuccessHandler(new MyLogout())//前后分离数据 ==============================
                 .and().csrf().disable();//禁止csrf跨站请求保护
-//                .antMatchers("/level1/**").hasRole("vip1")
-//                .antMatchers("/level2/**").hasRole("vip2")
-//                .antMatchers("/level3/**").hasRole("vip3");
 
         //无权限则跳登录
 //        http.formLogin();
@@ -45,15 +50,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.logout().logoutSuccessUrl("/backend/login/login");
     }
 
+
+
     //重写认证
-//    @Override
-    /*protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-//        auth.jdbcAuthentication()  链接数据库
+    @Override
+    public void configure(AuthenticationManagerBuilder auth) throws Exception {
         //链接内存
-        auth.inMemoryAuthentication().passwordEncoder(new BCryptPasswordEncoder())
-                .withUser("admin").password(new BCryptPasswordEncoder().encode("admin")).roles("vip1","vip2","vip3")
-                .and().withUser("test").password(new BCryptPasswordEncoder().encode("123456")).roles("vip2","vip3")
-                .and().withUser("huang").password(new BCryptPasswordEncoder().encode("123456")).roles("vip1")
-                .and().withUser("optest").password(new BCryptPasswordEncoder().encode("123456")).roles("vip1","vip3");
-    }*/
+        System.out.println("auth = " + auth);
+        auth.userDetailsService(securityConfig);
+    }
 }

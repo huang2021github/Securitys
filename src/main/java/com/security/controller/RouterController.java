@@ -2,7 +2,6 @@ package com.security.controller;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -12,6 +11,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class RouterController {
 
 
+    /**
+     * 测试接口
+     * @return
+     */
     @RequestMapping("/index/pc")
     public String PCOne(){
         return "PC所有用户 均可访问的接口";
@@ -27,6 +30,12 @@ public class RouterController {
         return "PC指定用户可访问接口2";
     }
 
+    @RequestMapping("/appoint/pct")
+    public String appoint(){
+        return "指定访问接口";
+    }
+
+
     //获取认证信息 Authentication information
     public void getAuthentication(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();//或者强转User获取
@@ -34,7 +43,7 @@ public class RouterController {
         System.out.println("权限信息：" + authentication.getAuthorities());
     }
 
-    /*@RequestMapping("/toLogin")
+    @RequestMapping("/toLogin")
     public String toLogin(){
         return "views/login";
     }
@@ -52,6 +61,6 @@ public class RouterController {
     @RequestMapping("/level3/{id}")
     public String level3(@PathVariable int id){
         return "views/level3/" + id;
-    }*/
+    }
 
 }
